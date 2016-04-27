@@ -63,12 +63,8 @@ Function GetPlays($limit) {
             $date = Get-Date "1970-01-01 00:00:00";
             $date = $date.AddSeconds([int]$track.date.uts);
 
-            $album = $track.album.innerText
-            $album = [regex]::Replace($album, " \(.+\)\s*$", "")
-            $album = [regex]::Replace($album, " \[.+\]\s*$", "")
-            $album = [regex]::Replace($album, " -\s*.+$", "")
-            $album = [regex]::Replace($album, "[\W\s]*$", "")
-        
+            $album = NormalizeAlbumName $track.album.innerText
+            
             $play = @{
                 'Artist' = $track.artist.InnerText;
                 'Album' = $album;
@@ -83,4 +79,43 @@ Function GetPlays($limit) {
     }
 
     return $result;
+}
+
+Function NormalizeAlbumName($album) {
+    $result = $album
+
+    $result = [regex]::Replace($result, " \(.+\)\s*$", "")
+    $result = [regex]::Replace($result, " \[.+\]\s*$", "")
+    $result = [regex]::Replace($result, " -\s*.+$", "")
+    $result = [regex]::Replace($result, "[\W\s]*$", "")
+
+    $result
+}
+
+Function UrlDecode($s) {
+    [System.Web.HttpUtility]::UrlDecode($s)
+}
+
+Function GetLocalTracks() {
+    $local = Get-Content C:\users\celston\Desktop\local.txt
+
+    $regex = "local/([^/]+)/([^/]+)/([^/]+)"
+
+    $result = @()
+
+    foreach ($uri in $local) {
+        if ($uri -match $regex) {
+            $hash = @{
+                "artist" =  UrlDecode $matches[1];
+                "album" = NormalizeAlbumName (UrlDecode $matches[2]);
+                "name" = UrlDecode $matches[3];
+                "uri" = $uri;
+            }
+
+
+            $result += New-Object PSObject -Property $hash
+        }
+    }
+
+    $result
 }

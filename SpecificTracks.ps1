@@ -1,4 +1,4 @@
-﻿. "C:\Users\celston\Documents\PowerShell\Music\Common.ps1"
+﻿. "C:\Git\powershell-music\Common.ps1"
 
 $DebugPreference = "Continue";
 
