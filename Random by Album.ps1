@@ -51,7 +51,7 @@ $recentPlays = $plays | Where-Object { $_.Date -gt (Get-Date).AddDays(-60) }
 $local = Import-Clixml C:\Users\celston\last.fm\local.xml
 #$local = @()
 
-$total = 25
+$total = 50
 
 $randomPlays = @()
 for ($i = 1; $i -le $total; $i++) {
@@ -204,3 +204,5 @@ foreach ($play in $randomPlays) {
 
 $result = $result | Sort-Object { Get-Random }
 $result | Set-Content C:\Users\celston\last.fm\playlist.txt
+
+(new-object Media.SoundPlayer "C:\WINDOWS\Media\notify.wav").play();

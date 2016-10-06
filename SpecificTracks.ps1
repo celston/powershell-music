@@ -78,6 +78,7 @@ foreach ($line in $input) {
     else {
         Write-Debug "No Spotify track search results for $artist - $track"
     }
+    Start-Sleep -m 100
 }
 
 $result | Set-Content C:\Users\celston\Desktop\playlist.txt
